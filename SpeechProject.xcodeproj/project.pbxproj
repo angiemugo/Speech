@@ -10,6 +10,7 @@
 		77CEA5F56E628724EF3267CE /* Pods_SpeechProject_SpeechProjectUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6A47FF10693A7EC3B895785 /* Pods_SpeechProject_SpeechProjectUITests.framework */; };
 		C6CB34722F03DCB95F458720 /* Pods_SpeechProjectTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C72619BF4EE821DB1C0B1BF /* Pods_SpeechProjectTests.framework */; };
 		EF45683FD6502E2015400E77 /* Pods_SpeechProject.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70F00F243B3D338FF4E5B511 /* Pods_SpeechProject.framework */; };
+		FD9B0B8625C8B5D80021D662 /* SpeechError.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD9B0B8525C8B5D80021D662 /* SpeechError.swift */; };
 		FD9E4C1625C8520900B72988 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD9E4C1525C8520900B72988 /* BaseViewController.swift */; };
 		FDD4738C25C6B50D008E66D6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDD4738B25C6B50D008E66D6 /* AppDelegate.swift */; };
 		FDD4739025C6B50D008E66D6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDD4738F25C6B50D008E66D6 /* ViewController.swift */; };
@@ -50,6 +51,7 @@
 		E6A47FF10693A7EC3B895785 /* Pods_SpeechProject_SpeechProjectUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpeechProject_SpeechProjectUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E82B158AE9E1B73A144C80E0 /* Pods-SpeechProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpeechProject.release.xcconfig"; path = "Target Support Files/Pods-SpeechProject/Pods-SpeechProject.release.xcconfig"; sourceTree = "<group>"; };
 		F332B167DB07FFDE7EB2E648 /* Pods-SpeechProject-SpeechProjectUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpeechProject-SpeechProjectUITests.debug.xcconfig"; path = "Target Support Files/Pods-SpeechProject-SpeechProjectUITests/Pods-SpeechProject-SpeechProjectUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		FD9B0B8525C8B5D80021D662 /* SpeechError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechError.swift; sourceTree = "<group>"; };
 		FD9E4C1525C8520900B72988 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		FDD4738825C6B50D008E66D6 /* SpeechProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpeechProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FDD4738B25C6B50D008E66D6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -155,6 +157,7 @@
 				FDD473DD25C6B764008E66D6 /* AudioService.swift */,
 				FDD473F025C6C517008E66D6 /* UIView+Extension.swift */,
 				FD9E4C1525C8520900B72988 /* BaseViewController.swift */,
+				FD9B0B8525C8B5D80021D662 /* SpeechError.swift */,
 			);
 			path = SpeechProject;
 			sourceTree = "<group>";
@@ -420,6 +423,7 @@
 				FDD473D925C6B6A4008E66D6 /* SpeechService.swift in Sources */,
 				FDD473C525C6B560008E66D6 /* ViewModel.swift in Sources */,
 				FD9E4C1625C8520900B72988 /* BaseViewController.swift in Sources */,
+				FD9B0B8625C8B5D80021D662 /* SpeechError.swift in Sources */,
 				FDD4738C25C6B50D008E66D6 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

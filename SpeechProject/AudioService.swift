@@ -6,17 +6,15 @@
 //
 
 import AVFoundation
-var audioFilePlayer = AVAudioPlayerNode()
-
 
 class AudioService {
     let audioEngine = AVAudioEngine()
-    let audioSession = AVAudioSession.sharedInstance()
-    var buffer: AVAudioPCMBuffer?
+    public let synthesizer = AVSpeechSynthesizer()
     static let shared = AudioService()
 
-    func record(_ completion: @escaping (AVAudioPCMBuffer) -> Void) {
+    func record(_ completion: @escaping (AVAudioPCMBuffer?, SpeechError?) -> Void) {
         do {
+            let audioSession = AVAudioSession.sharedInstance()
             try audioSession.setCategory(.playAndRecord, mode: .measurement, options: .duckOthers)
             try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
             let inputNode = audioEngine.inputNode
@@ -25,36 +23,24 @@ class AudioService {
             inputNode.installTap(onBus: 0,
                                  bufferSize: 1024,
                                  format: recordingFormat) { (buffer, _) in
-                self.buffer = buffer
-                completion(buffer)
+                completion(buffer, nil)
             }
             audioEngine.prepare()
             try audioEngine.start()
         } catch let error {
-            print(error)
+            let speechError = SpeechError.AudioEngineError(message: error.localizedDescription)
+            completion(nil, speechError)
         }
     }
 
-    func play() {
-        do {
-            let mainMixer = audioEngine.mainMixerNode
-            audioEngine.attach(audioFilePlayer)
-            audioEngine.connect(audioFilePlayer, to: mainMixer, format: buffer?.format)
-            try audioEngine.start()
-            audioFilePlayer.play()
-            audioFilePlayer.scheduleBuffer(buffer!, completionHandler: nil)
-        } catch let error {
-            print(error)
-        }
+    func play(_ text: String) {
+        let speech = AVSpeechUtterance(string: text)
+        synthesizer.speak(speech)
     }
+
 
     func stop() {
         audioEngine.inputNode.removeTap(onBus: 0)
-        audioEngine.stop()
-    }
-
-    func stopPlaybackEngine() {
-        audioEngine.outputNode.removeTap(onBus: 0)
         audioEngine.stop()
     }
 }

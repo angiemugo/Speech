@@ -8,27 +8,21 @@
 import Speech
 import RxSwift
 
-enum SpeechError: Error {
-    case SFSpeechError
-}
-
 class SpeechService {
     private let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))!
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
     private var recognitionTask: SFSpeechRecognitionTask?
     static let shared = SpeechService()
 
-    func setUpService(_ buffer: AVAudioPCMBuffer) -> Observable<String> {
+    func setUpService() -> Observable<String> {
+        var text = ""
+        recognitionTask?.cancel()
+        self.recognitionTask = nil
+
+        recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
+        guard let recogRequest = recognitionRequest else { fatalError("Unable to create a SFSpeechAudioBufferRecognitionRequest object") }
+        recognitionRequest?.shouldReportPartialResults = true
         return Observable.create { observer in
-            var text = ""
-            self.recognitionTask?.cancel()
-            self.recognitionTask = nil
-            self.recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
-            guard let recogRequest = self.recognitionRequest else {
-                observer.onError(SpeechError.SFSpeechError)
-                return Disposables.create()
-            }
-            recogRequest.shouldReportPartialResults = true
             self.recognitionTask = self.speechRecognizer.recognitionTask(with: recogRequest) { result, error in
                 var isFinal = false
 
@@ -38,13 +32,6 @@ class SpeechService {
                     observer.onNext(text)
                 }
 
-                if let error = error {
-                    AudioService.shared.stop()
-                    self.recognitionRequest = nil
-                    self.recognitionTask = nil
-                    observer.onError(error)
-                }
-
                 if error != nil || isFinal {
                     AudioService.shared.stop()
                     self.recognitionRequest = nil
@@ -52,7 +39,15 @@ class SpeechService {
                 }
             }
 
-            recogRequest.append(buffer)
+            AudioService.shared.record { (buffer, error) in
+                if let buffer = buffer {
+                    self.recognitionRequest?.append(buffer)
+                }
+
+                if let error = error {
+                    observer.onError(error)
+                }
+            }
             return Disposables.create()
         }
     }
@@ -78,6 +73,7 @@ class SpeechService {
         }
         return errorString
     }
+
 
     func stop() {
         if AudioService.shared.audioEngine.isRunning {
