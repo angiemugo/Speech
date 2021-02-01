@@ -16,23 +16,19 @@ class AudioService {
     static let shared = AudioService()
 
     func record(_ completion: @escaping (AVAudioPCMBuffer) -> Void) {
-        do {
-            try audioSession.setCategory(.playAndRecord, mode: .measurement, options: .duckOthers)
-            try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
-            let inputNode = audioEngine.inputNode
-            let recordingFormat = inputNode.outputFormat(forBus: 0)
+        try! audioSession.setCategory(.playAndRecord, mode: .measurement, options: .duckOthers)
+        try! audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+        let inputNode = audioEngine.inputNode
+        let recordingFormat = inputNode.outputFormat(forBus: 0)
 
-            inputNode.installTap(onBus: 0,
-                                 bufferSize: 1024,
-                                 format: recordingFormat) { (buffer, _) in
-                self.buffer = buffer
-                completion(buffer)
-            }
-            audioEngine.prepare()
-            try audioEngine.start()
-        } catch let error {
-            print(error)
+        inputNode.installTap(onBus: 0,
+                             bufferSize: 1024,
+                             format: recordingFormat) { (buffer, _) in
+            self.buffer = buffer
+            completion(buffer)
         }
+        audioEngine.prepare()
+        try! audioEngine.start()
     }
 
     func play() {

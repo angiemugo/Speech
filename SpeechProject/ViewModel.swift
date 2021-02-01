@@ -15,7 +15,6 @@ class ViewModel: NSObject {
     let words = BehaviorRelay(value: "")
     var permissionError = BehaviorRelay(value: "")
     let disposeBag = DisposeBag()
-    let speechService = SpeechService()
     
     func toggleIsRecording() {
         isRecording.accept(!isRecording.value)
@@ -34,15 +33,10 @@ class ViewModel: NSObject {
         if isRecording.value {
             self.stopRecording()
         } else {
-            AudioService.shared.record({ [weak self] buffer in
+            SpeechService.shared.setUpService().subscribe({ [weak self] (text) in
                 guard let self = self else { return }
-                self.speechService.setUpService(buffer).subscribe(onNext: { [weak self] (text) in
-                    guard let self = self else { return }
-                    self.words.accept(text)
-                }, onError: { error in
-                    self.permissionError.accept(error.localizedDescription)
-                }).disposed(by: self.disposeBag)
-            })
+                self.words.accept(text.element ?? "")
+            }).disposed(by: disposeBag)
         }
     }
 
