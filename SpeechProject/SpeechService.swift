@@ -24,24 +24,30 @@ class SpeechService {
         recognitionRequest?.shouldReportPartialResults = true
         return Observable.create { observer in
             self.recognitionTask = self.speechRecognizer.recognitionTask(with: recogRequest) { result, error in
-            var isFinal = false
+                var isFinal = false
 
-            if let result = result {
-                text = result.bestTranscription.formattedString
-                isFinal = result.isFinal
-                observer.onNext(text)
+                if let result = result {
+                    text = result.bestTranscription.formattedString
+                    isFinal = result.isFinal
+                    observer.onNext(text)
+                }
+
+                if error != nil || isFinal {
+                    AudioService.shared.stop()
+                    self.recognitionRequest = nil
+                    self.recognitionTask = nil
+                }
             }
 
-            if error != nil || isFinal {
-                AudioService.shared.stop()
-                self.recognitionRequest = nil
-                self.recognitionTask = nil
-            }
-        }
+            AudioService.shared.record { (buffer, error) in
+                if let buffer = buffer {
+                    self.recognitionRequest?.append(buffer)
+                }
 
-        AudioService.shared.record { (buffer) in
-            self.recognitionRequest?.append(buffer)
-        }
+                if let error = error {
+                    observer.onError(error)
+                }
+            }
             return Disposables.create()
         }
     }

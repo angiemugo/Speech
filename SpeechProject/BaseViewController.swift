@@ -25,10 +25,9 @@ class BaseViewController: UIViewController {
         }
     }
 
-    func showAlert(_ title: String, message: String, actionTitle: String) {
+    func showAlert(_ title: String, message: String, action: UIAlertAction) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let alertAction = UIAlertAction(title: actionTitle, style: .cancel, handler: nil)
-        alertController.addAction(alertAction)
+        alertController.addAction(action)
         present(alertController, animated: true, completion: nil)
     }
 }

@@ -14,6 +14,7 @@ class ViewModel: NSObject {
     let isPlaying = BehaviorRelay(value: false)
     let words = BehaviorRelay(value: "")
     var permissionError = BehaviorRelay(value: "")
+    var generalError = PublishRelay<SpeechError?>()
     let disposeBag = DisposeBag()
     
     func toggleIsRecording() {
@@ -33,9 +34,11 @@ class ViewModel: NSObject {
         if isRecording.value {
             self.stopRecording()
         } else {
-            SpeechService.shared.setUpService().subscribe({ [weak self] (text) in
+            SpeechService.shared.setUpService().subscribe(onNext: { [weak self] (text) in
                 guard let self = self else { return }
-                self.words.accept(text.element ?? "")
+                self.words.accept(text)
+            }, onError: { (error) in
+                self.generalError.accept(error as? SpeechError)
             }).disposed(by: disposeBag)
         }
     }
@@ -45,6 +48,6 @@ class ViewModel: NSObject {
     }
     
     func play() {
-        AudioService.shared.play()
+        AudioService.shared.play(words.value)
     }
 }
